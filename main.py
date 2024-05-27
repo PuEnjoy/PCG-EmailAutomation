@@ -1,16 +1,20 @@
 from flask import Flask, request, jsonify
 import pandas as pd
-from database_setup import EmailPattern, session
+from database_setup import Base, engine, Session, EmailPattern
 from io import StringIO
 
+# Initialize Flask application
 app = Flask(__name__)
+
+# Ensure database is set up
+Base.metadata.create_all(engine)
+session = Session()
 
 @app.route('/addEmailPattern', methods=['POST'])
 def add_email_pattern():
-    print("triggered add")
     csv_data = request.data.decode('utf-8')
     data = pd.read_csv(StringIO(csv_data))
-    print(data)
+
     for _, row in data.iterrows():
         company_name = row['Firma']
         domain = row['Domain']
@@ -18,15 +22,12 @@ def add_email_pattern():
         zuname = row['Zuname']
         email = row['Email']
 
-        print("goint to add here:")
         pattern = detect_email_pattern(vorname, zuname, email, domain)
         save_pattern(company_name, domain, pattern)
     
-    print("after loop")
     return 'Email patterns processed and saved.'
 
 def detect_email_pattern(vorname, zuname, email, domain):
-    print("detect triggered")
     patterns = {
         f"{vorname}.{zuname}@{domain}": "{vorname}.{zuname}@{domain}",
         f"{vorname}@{domain}": "{vorname}@{domain}",
@@ -42,15 +43,12 @@ def detect_email_pattern(vorname, zuname, email, domain):
     return "unknown"
 
 def save_pattern(company_name, domain, pattern):
-    print("triggered save pattern!")
     existing_pattern = session.query(EmailPattern).filter_by(company_name=company_name, domain=domain).first()
     if not existing_pattern:
-        print("adding new pattern to db")
         new_pattern = EmailPattern(company_name=company_name, domain=domain, pattern=pattern)
         session.add(new_pattern)
         session.commit()
     else:
-        print("pattern exists already")
         existing_pattern.pattern = pattern
         session.commit()
 
