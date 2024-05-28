@@ -100,7 +100,7 @@ function populateEmails() {
 
   var csvContent = csvRows.join("\n");
 
-  var apiUrl = 'https://pcg-emailautomation.onrender.com/getEmail'; // Replace with actual API endpoint
+  var apiUrl = 'https://api.cloudspam.net/getEmail'; // Replace with actual API endpoint
   var options = {
     method: 'post',
     contentType: 'application/csv',

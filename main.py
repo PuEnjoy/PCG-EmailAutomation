@@ -1,3 +1,15 @@
+#   ______                 _ _                 _                        _   _             
+#  |  ____|               (_) |     /\        | |                      | | (_)            
+#  | |__   _ __ ___   __ _ _| |    /  \  _   _| |_ ___  _ __ ___   __ _| |_ _  ___  _ __  
+#  |  __| | '_ ` _ \ / _` | | |   / /\ \| | | | __/ _ \| '_ ` _ \ / _` | __| |/ _ \| '_ \ 
+#  | |____| | | | | | (_| | | |  / ____ \ |_| | || (_) | | | | | | (_| | |_| | (_) | | | |
+#  |______|_| |_| |_|\__,_|_|_| /_/    \_\__,_|\__\___/|_| |_| |_|\__,_|\__|_|\___/|_| |_|
+                                                                                        
+
+# Author: Tobias Kregelin
+# Visit the official github page: https://github.com/PuEnjoy/PCG-EmailAutomation
+
+#========================Start of main.py code============================================
 import logging
 import os
 from flask import Flask, request, jsonify
@@ -43,7 +55,7 @@ def add_email_pattern():
     for _, row in data.iterrows():
         if any(pd.isna(row[col]) for col in required_columns):
             continue
-        
+
         company_name = row['Company']
         domain = row['Domain']
         firstname = row['Firstname']
@@ -128,7 +140,7 @@ def get_email():
                 'Domain': domain,
                 'Firstname': firstname,
                 'Lastname': lastname,
-                'Email': 'Pattern not found'
+                'Email': None
             })
 
     return jsonify(response)
@@ -136,3 +148,23 @@ def get_email():
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
+
+#========================End of main.py code============================================
+
+#   _      _                        
+#  | |    (_)                     _ 
+#  | |     _  ___ ___ _ __  ___  (_)
+#  | |    | |/ __/ _ \ '_ \/ __|    
+#  | |____| | (_|  __/ | | \__ \  _ 
+#  |______|_|\___\___|_| |_|___/ (_)
+                                  
+# [![CC BY-NC-SA 4.0][cc-by-nc-sa-shield]][cc-by-nc-sa]
+
+# This work is licensed under a
+# [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License][cc-by-nc-sa].
+
+# [![CC BY-NC-SA 4.0][cc-by-nc-sa-image]][cc-by-nc-sa]
+
+# [cc-by-nc-sa]: http://creativecommons.org/licenses/by-nc-sa/4.0/
+# [cc-by-nc-sa-image]: https://licensebuttons.net/l/by-nc-sa/4.0/88x31.png
+# [cc-by-nc-sa-shield]: https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg
