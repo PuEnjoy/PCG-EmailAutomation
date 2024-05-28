@@ -24,7 +24,6 @@ def add_email_pattern():
         data = pd.read_csv(StringIO(csv_data))
     except pd.errors.ParserError as e:
         logger.error(f"Error parsing CSV data: {e}")
-        print(csv_data)
         return jsonify({"error": "Malformed CSV data"}), 400
     
     for _, row in data.iterrows():
@@ -35,18 +34,36 @@ def add_email_pattern():
         email = row['Email']
 
         pattern = detect_email_pattern(vorname, zuname, email, domain)
-        save_pattern(company_name, domain, pattern)
+        if pattern != "unknown":
+            save_pattern(company_name, domain, pattern)
     
     return 'Email patterns processed and saved.'
 
 def detect_email_pattern(vorname, zuname, email, domain):
     email = str(email)
     patterns = {
+        # Voller name
         f"{vorname}.{zuname}@{domain}": "{vorname}.{zuname}@{domain}",
-        f"{vorname}@{domain}": "{vorname}@{domain}",
-        f"{zuname}@{domain}": "{zuname}@{domain}",
+        f"{vorname}{zuname}@{domain}": "{vorname}{zuname}@{domain}",
+        f"{vorname}-{zuname}@{domain}": "{vorname}-{zuname}@{domain}",
+        f"{vorname}_{zuname}@{domain}": "{vorname}_{zuname}@{domain}",
+        f"{vorname}@{domain}": "{vorname}@{domain}", #Nur Vorname
+        f"{zuname}@{domain}": "{zuname}@{domain}", #Nur Nachname
+        # 1. Buchstabe Vorname, voller nachname
         f"{vorname[0]}.{zuname}@{domain}": "{vorname[0]}.{zuname}@{domain}",
-        f"{vorname[0]}{zuname}@{domain}": "{vorname[0]}{zuname}@{domain}"
+        f"{vorname[0]}{zuname}@{domain}": "{vorname[0]}{zuname}@{domain}",
+        f"{vorname[0]}-{zuname}@{domain}": "{vorname[0]}-{zuname}@{domain}",
+        f"{vorname[0]}_{zuname}@{domain}": "{vorname[0]}_{zuname}@{domain}",
+        # Voller Vorname, 1. Buchstabe nachname
+        f"{vorname}.{zuname[0]}@{domain}": "{vorname}.{zuname[0]}@{domain}",
+        f"{vorname}{zuname[0]}@{domain}": "{vorname}{zuname[0]}@{domain}",
+        f"{vorname}-{zuname[0]}@{domain}": "{vorname}-{zuname[0]}@{domain}",
+        f"{vorname}_{zuname[0]}@{domain}": "{vorname}_{zuname[0]}@{domain}",
+        # 1. Buchstabe Vorname, 1. Buchstabe nachname
+        f"{vorname[0]}.{zuname[0]}@{domain}": "{vorname[0]}.{zuname[0]}@{domain}",
+        f"{vorname[0]}{zuname[0]}@{domain}": "{vorname[0]}{zuname[0]}@{domain}",
+        f"{vorname[0]}-{zuname[0]}@{domain}": "{vorname[0]}-{zuname[0]}@{domain}",
+        f"{vorname[0]}_{zuname[0]}@{domain}": "{vorname[0]}_{zuname[0]}@{domain}",
     }
 
     for pattern, generalized in patterns.items():
@@ -61,7 +78,7 @@ def save_pattern(company_name, domain, pattern):
         new_pattern = EmailPattern(company_name=company_name, domain=domain, pattern=pattern)
         session.add(new_pattern)
         session.commit()
-    else:
+    elif existing_pattern.status != "verified":
         existing_pattern.pattern = pattern
         session.commit()
 
