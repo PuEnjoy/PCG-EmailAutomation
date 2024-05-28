@@ -38,7 +38,12 @@ def add_email_pattern():
         logger.error(f"Error parsing CSV data: {e}")
         return jsonify({"error": "Malformed CSV data"}), 400
     
+    required_columns = ['Company', 'Domain', 'Firstname', 'Lastname', 'Email']
+
     for _, row in data.iterrows():
+        if any(pd.isna(row[col]) for col in required_columns):
+            continue
+        
         company_name = row['Company']
         domain = row['Domain']
         firstname = row['Firstname']
