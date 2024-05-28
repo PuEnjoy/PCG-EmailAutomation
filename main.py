@@ -1,5 +1,6 @@
 import logging
 import os
+from os.path import join, dirname
 from flask import Flask, request, jsonify
 import pandas as pd
 from database_setup import Base, engine, Session, EmailPattern
@@ -7,14 +8,15 @@ from dotenv import load_dotenv
 from io import StringIO
 
 #Load environment varibles from .env
-load_dotenv()
+dotenv_path = join(dirname(__file__), 'data/.env')
+load_dotenv(dotenv_path)
 
 if not os.path.exists(".env"):
         with open(".env", 'w'):
             pass
 
 #Get api key
-API_KEYS = os.getenv('API_KEYS').split(',')
+API_KEYS = os.environ.get('API_KEYS').split(',')
 
 # Initialize Flask application
 app = Flask(__name__)
