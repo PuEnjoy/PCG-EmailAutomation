@@ -40,6 +40,7 @@ def add_email_pattern():
     return 'Email patterns processed and saved.'
 
 def detect_email_pattern(vorname, zuname, email, domain):
+    email = str(email)
     patterns = {
         f"{vorname}.{zuname}@{domain}": "{vorname}.{zuname}@{domain}",
         f"{vorname}@{domain}": "{vorname}@{domain}",
