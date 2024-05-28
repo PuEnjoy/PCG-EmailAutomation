@@ -9,6 +9,10 @@ from io import StringIO
 #Load environment varibles from .env
 load_dotenv()
 
+if not os.path.exists(".env"):
+        with open(".env", 'w'):
+            pass
+        
 #Get api key
 API_KEYS = os.getenv('API_KEYS').split(',')
 
