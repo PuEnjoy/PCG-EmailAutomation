@@ -1,3 +1,4 @@
+import os
 from flask import Flask, request, jsonify
 import pandas as pd
 from database_setup import Base, engine, Session, EmailPattern
@@ -87,4 +88,5 @@ def get_email():
     return jsonify(response)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
