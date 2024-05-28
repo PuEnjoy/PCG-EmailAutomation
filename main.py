@@ -3,10 +3,21 @@ import os
 from flask import Flask, request, jsonify
 import pandas as pd
 from database_setup import Base, engine, Session, EmailPattern
+from dotenv import load_dotenv
 from io import StringIO
+
+#Load environment varibles from .env
+load_dotenv()
+
+#Get api key
+API_KEYS = os.getenv('API_KEYS').split(',')
 
 # Initialize Flask application
 app = Flask(__name__)
+
+# Function to check api keys
+def check_api_key(api_key):
+    return api_key in API_KEYS
 
 # Ensure database is set up
 Base.metadata.create_all(engine)
@@ -18,6 +29,10 @@ logger = logging.getLogger(__name__)
 
 @app.route('/addEmailPattern', methods=['POST'])
 def add_email_pattern():
+    api_key = request.headers.get('X-API-KEY')
+    if not check_api_key(api_key):
+        return jsonify({"error": "Unauthorized"}), 401
+    
     csv_data = request.data.decode('utf-8')
 
     try:
