@@ -116,8 +116,12 @@ def get_email():
     csv_data = request.data.decode('utf-8')
     data = pd.read_csv(StringIO(csv_data))
     
+    required_columns = ['Company', 'Domain', 'Firstname', 'Lastname']
+
     response = []
     for _, row in data.iterrows():
+        if any(pd.isna(row[col]) for col in required_columns):
+            continue
         company_name = row['Company']
         domain = row['Domain']
         firstname = row['Firstname']
