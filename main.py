@@ -39,43 +39,43 @@ def add_email_pattern():
         return jsonify({"error": "Malformed CSV data"}), 400
     
     for _, row in data.iterrows():
-        company_name = row['Firma']
+        company_name = row['Company']
         domain = row['Domain']
-        vorname = row['Vorname']
-        zuname = row['Zuname']
+        firstname = row['Firstname']
+        lastname = row['Lastname']
         email = row['Email']
 
-        pattern = detect_email_pattern(vorname, zuname, email, domain)
+        pattern = detect_email_pattern(firstname, lastname, email, domain)
         if pattern != "unknown":
             save_pattern(company_name, domain, pattern)
     
     return 'Email patterns processed and saved.'
 
-def detect_email_pattern(vorname, zuname, email, domain):
+def detect_email_pattern(firstname, lastname, email, domain):
     email = str(email)
     patterns = {
         # Voller name
-        f"{vorname}.{zuname}@{domain}": "{vorname}.{zuname}@{domain}",
-        f"{vorname}{zuname}@{domain}": "{vorname}{zuname}@{domain}",
-        f"{vorname}-{zuname}@{domain}": "{vorname}-{zuname}@{domain}",
-        f"{vorname}_{zuname}@{domain}": "{vorname}_{zuname}@{domain}",
-        f"{vorname}@{domain}": "{vorname}@{domain}", #Nur Vorname
-        f"{zuname}@{domain}": "{zuname}@{domain}", #Nur Nachname
-        # 1. Buchstabe Vorname, voller nachname
-        f"{vorname[0]}.{zuname}@{domain}": "{vorname[0]}.{zuname}@{domain}",
-        f"{vorname[0]}{zuname}@{domain}": "{vorname[0]}{zuname}@{domain}",
-        f"{vorname[0]}-{zuname}@{domain}": "{vorname[0]}-{zuname}@{domain}",
-        f"{vorname[0]}_{zuname}@{domain}": "{vorname[0]}_{zuname}@{domain}",
-        # Voller Vorname, 1. Buchstabe nachname
-        f"{vorname}.{zuname[0]}@{domain}": "{vorname}.{zuname[0]}@{domain}",
-        f"{vorname}{zuname[0]}@{domain}": "{vorname}{zuname[0]}@{domain}",
-        f"{vorname}-{zuname[0]}@{domain}": "{vorname}-{zuname[0]}@{domain}",
-        f"{vorname}_{zuname[0]}@{domain}": "{vorname}_{zuname[0]}@{domain}",
-        # 1. Buchstabe Vorname, 1. Buchstabe nachname
-        f"{vorname[0]}.{zuname[0]}@{domain}": "{vorname[0]}.{zuname[0]}@{domain}",
-        f"{vorname[0]}{zuname[0]}@{domain}": "{vorname[0]}{zuname[0]}@{domain}",
-        f"{vorname[0]}-{zuname[0]}@{domain}": "{vorname[0]}-{zuname[0]}@{domain}",
-        f"{vorname[0]}_{zuname[0]}@{domain}": "{vorname[0]}_{zuname[0]}@{domain}",
+        f"{firstname}.{lastname}@{domain}": "{firstname}.{lastname}@{domain}",
+        f"{firstname}{lastname}@{domain}": "{firstname}{lastname}@{domain}",
+        f"{firstname}-{lastname}@{domain}": "{firstname}-{lastname}@{domain}",
+        f"{firstname}_{lastname}@{domain}": "{firstname}_{lastname}@{domain}",
+        f"{firstname}@{domain}": "{firstname}@{domain}", #Nur firstname
+        f"{lastname}@{domain}": "{lastname}@{domain}", #Nur Nachname
+        # 1. Buchstabe firstname, voller nachname
+        f"{firstname[0]}.{lastname}@{domain}": "{firstname[0]}.{lastname}@{domain}",
+        f"{firstname[0]}{lastname}@{domain}": "{firstname[0]}{lastname}@{domain}",
+        f"{firstname[0]}-{lastname}@{domain}": "{firstname[0]}-{lastname}@{domain}",
+        f"{firstname[0]}_{lastname}@{domain}": "{firstname[0]}_{lastname}@{domain}",
+        # Voller firstname, 1. Buchstabe nachname
+        f"{firstname}.{lastname[0]}@{domain}": "{firstname}.{lastname[0]}@{domain}",
+        f"{firstname}{lastname[0]}@{domain}": "{firstname}{lastname[0]}@{domain}",
+        f"{firstname}-{lastname[0]}@{domain}": "{firstname}-{lastname[0]}@{domain}",
+        f"{firstname}_{lastname[0]}@{domain}": "{firstname}_{lastname[0]}@{domain}",
+        # 1. Buchstabe firstname, 1. Buchstabe nachname
+        f"{firstname[0]}.{lastname[0]}@{domain}": "{firstname[0]}.{lastname[0]}@{domain}",
+        f"{firstname[0]}{lastname[0]}@{domain}": "{firstname[0]}{lastname[0]}@{domain}",
+        f"{firstname[0]}-{lastname[0]}@{domain}": "{firstname[0]}-{lastname[0]}@{domain}",
+        f"{firstname[0]}_{lastname[0]}@{domain}": "{firstname[0]}_{lastname[0]}@{domain}",
     }
 
     for pattern, generalized in patterns.items():
@@ -101,28 +101,28 @@ def get_email():
     
     response = []
     for _, row in data.iterrows():
-        company_name = row['Firma']
+        company_name = row['Company']
         domain = row['Domain']
-        vorname = row['Vorname']
-        zuname = row['Zuname']
+        firstname = row['Firstname']
+        lastname = row['Lastname']
 
         email_pattern = session.query(EmailPattern).filter_by(company_name=company_name, domain=domain).first()
         if email_pattern:
             generalized_pattern = email_pattern.pattern
-            email = generalized_pattern.format(vorname=vorname, zuname=zuname, domain=domain, vorname_0=vorname[0])
+            email = generalized_pattern.format(firstname=firstname, lastname=lastname, domain=domain, firstname_0=firstname[0])
             response.append({
-                'Firma': company_name,
+                'Company': company_name,
                 'Domain': domain,
-                'Vorname': vorname,
-                'Zuname': zuname,
+                'Firstname': firstname,
+                'Lastname': lastname,
                 'Email': email
             })
         else:
             response.append({
-                'Firma': company_name,
+                'Company': company_name,
                 'Domain': domain,
-                'Vorname': vorname,
-                'Zuname': zuname,
+                'Firstname': firstname,
+                'Lastname': lastname,
                 'Email': 'Pattern not found'
             })
 
