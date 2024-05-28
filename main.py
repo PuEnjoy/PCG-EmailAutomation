@@ -1,29 +1,20 @@
 import logging
 import os
-from os.path import join, dirname
 from flask import Flask, request, jsonify
 import pandas as pd
 from database_setup import Base, engine, Session, EmailPattern
-from dotenv import load_dotenv
 from io import StringIO
 
-#Load environment varibles from .env
-dotenv_path = join(dirname(__file__), 'data/.env')
-load_dotenv(dotenv_path)
 
-if not os.path.exists(".env"):
-        with open(".env", 'w'):
-            pass
-
-#Get api key
-API_KEYS = os.environ.get('API_KEYS').split(',')
+#This requires the environment varible API_KEYS to be set
+API_KEY = os.environ.get('API_KEY')
 
 # Initialize Flask application
 app = Flask(__name__)
 
-# Function to check api keys
+# Function to check api key
 def check_api_key(api_key):
-    return api_key in API_KEYS
+    return str(api_key) == str(API_KEY)
 
 # Ensure database is set up
 Base.metadata.create_all(engine)
