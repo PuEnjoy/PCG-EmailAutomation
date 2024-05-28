@@ -4,8 +4,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 # Ensure /data directory exists
-if not os.path.exists('/data'):
-    os.makedirs('/data')
+if not os.path.exists('./data'):
+    os.makedirs('./data')
 
 Base = declarative_base()
 
