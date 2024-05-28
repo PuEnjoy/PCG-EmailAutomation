@@ -1,3 +1,4 @@
+import logging
 import os
 from flask import Flask, request, jsonify
 import pandas as pd
@@ -11,11 +12,21 @@ app = Flask(__name__)
 Base.metadata.create_all(engine)
 session = Session()
 
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 @app.route('/addEmailPattern', methods=['POST'])
 def add_email_pattern():
     csv_data = request.data.decode('utf-8')
-    data = pd.read_csv(StringIO(csv_data))
 
+    try:
+        data = pd.read_csv(StringIO(csv_data))
+    except pd.errors.ParserError as e:
+        logger.error(f"Error parsing CSV data: {e}")
+        print(csv_data)
+        return jsonify({"error": "Malformed CSV data"}), 400
+    
     for _, row in data.iterrows():
         company_name = row['Firma']
         domain = row['Domain']
