@@ -12,16 +12,16 @@ load_dotenv()
 if not os.path.exists(".env"):
         with open(".env", 'w'):
             pass
-        
+
 #Get api key
-API_KEYS = os.getenv('API_KEYS').split(',')
+#API_KEYS = os.getenv('API_KEYS').split(',')
 
 # Initialize Flask application
 app = Flask(__name__)
 
 # Function to check api keys
-def check_api_key(api_key):
-    return api_key in API_KEYS
+# def check_api_key(api_key):
+#     return api_key in API_KEYS
 
 # Ensure database is set up
 Base.metadata.create_all(engine)
@@ -34,8 +34,8 @@ logger = logging.getLogger(__name__)
 @app.route('/addEmailPattern', methods=['POST'])
 def add_email_pattern():
     api_key = request.headers.get('X-API-KEY')
-    if not check_api_key(api_key):
-        return jsonify({"error": "Unauthorized"}), 401
+    # if not check_api_key(api_key):
+    #     return jsonify({"error": "Unauthorized"}), 401
     
     csv_data = request.data.decode('utf-8')
 
