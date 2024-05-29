@@ -14,6 +14,7 @@ class EmailPattern(Base):
     id = Column(Integer, primary_key=True)
     company_name = Column(String)
     domain = Column(String)
+    smart_domain = Column(String)
     pattern = Column(String)
     status = Column(String, default="unknown")  # New status column with default value
 
