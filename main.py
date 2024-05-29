@@ -144,7 +144,7 @@ def get_email():
                 'Domain': domain,
                 'Firstname': firstname,
                 'Lastname': lastname,
-                'Email': "unknown"
+                'Email': None
             })
 
     return jsonify(response)
