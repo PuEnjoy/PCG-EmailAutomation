@@ -117,7 +117,7 @@ This work is licensed under a
 ### Credits
 
 Tobias Kregelin
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-%230077B5.svg?logo=linkedin&logoColor=white)](https://linkedin.com/in/tobias-kregelin) [![Github](https://img.shields.io/badge/Github-121013?logo=github&logoColor=white)](https://github.com/PuEnjoy)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-%230077B5.svg?logo=linkedin&logoColor=white)](https://linkedin.com/in/tobias-kregelin-26a638271) [![Github](https://img.shields.io/badge/Github-121013?logo=github&logoColor=white)](https://github.com/PuEnjoy)
 
 Enjoy the project and want to support me?
-[![PayPal](https://img.shields.io/badge/PayPal-003087?logo=paypal&logoColor=fff)](paypal.me/tobiaskrgn)
+[![PayPal](https://img.shields.io/badge/PayPal-003087?logo=paypal&logoColor=fff)](https://paypal.me/tobiaskrgn)
