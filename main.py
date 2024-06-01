@@ -60,15 +60,19 @@ def add_email_pattern():
         domain = row['Domain']
         firstname = row['Firstname']
         lastname = row['Lastname']
-        email = row['Email']
+        email = str(row['Email'])
 
-        pattern = detect_email_pattern(firstname, lastname, email, domain)
+        smart_domain = email.split('@')[1]
+
+        pattern = detect_email_pattern(firstname, lastname, email, domain, smart_domain)
         if pattern != "unknown":
-            save_pattern(company_name, domain, pattern)
+            save_pattern(company_name, domain, smart_domain, pattern)
     
     return 'Email patterns processed and saved.'
 
-def detect_email_pattern(firstname, lastname, email, domain):
+
+
+def detect_email_pattern(firstname, lastname, email, domain, smart_domain):
     email = str(email)
     patterns = {
         # Voller name
@@ -93,6 +97,31 @@ def detect_email_pattern(firstname, lastname, email, domain):
         f"{firstname[0]}{lastname[0]}@{domain}": "{firstname[0]}{lastname[0]}@{domain}",
         f"{firstname[0]}-{lastname[0]}@{domain}": "{firstname[0]}-{lastname[0]}@{domain}",
         f"{firstname[0]}_{lastname[0]}@{domain}": "{firstname[0]}_{lastname[0]}@{domain}",
+
+        # Using smart domains ==============================
+
+        f"{firstname}.{lastname}@{smart_domain}": "{firstname}.{lastname}@{smart_domain}",
+        f"{firstname}{lastname}@{smart_domain}": "{firstname}{lastname}@{smart_domain}",
+        f"{firstname}-{lastname}@{smart_domain}": "{firstname}-{lastname}@{smart_domain}",
+        f"{firstname}_{lastname}@{smart_domain}": "{firstname}_{lastname}@{smart_domain}",
+        f"{firstname}@{smart_domain}": "{firstname}@{smart_domain}", #Nur firstname
+        f"{lastname}@{smart_domain}": "{lastname}@{smart_domain}", #Nur Nachname
+        # 1. Buchstabe firstname, voller nachname
+        f"{firstname[0]}.{lastname}@{smart_domain}": "{firstname[0]}.{lastname}@{smart_domain}",
+        f"{firstname[0]}{lastname}@{smart_domain}": "{firstname[0]}{lastname}@{smart_domain}",
+        f"{firstname[0]}-{lastname}@{smart_domain}": "{firstname[0]}-{lastname}@{smart_domain}",
+        f"{firstname[0]}_{lastname}@{smart_domain}": "{firstname[0]}_{lastname}@{smart_domain}",
+        # Voller firstname, 1. Buchstabe nachname
+        f"{firstname}.{lastname[0]}@{smart_domain}": "{firstname}.{lastname[0]}@{smart_domain}",
+        f"{firstname}{lastname[0]}@{smart_domain}": "{firstname}{lastname[0]}@{smart_domain}",
+        f"{firstname}-{lastname[0]}@{smart_domain}": "{firstname}-{lastname[0]}@{smart_domain}",
+        f"{firstname}_{lastname[0]}@{smart_domain}": "{firstname}_{lastname[0]}@{smart_domain}",
+        # 1. Buchstabe firstname, 1. Buchstabe nachname
+        f"{firstname[0]}.{lastname[0]}@{smart_domain}": "{firstname[0]}.{lastname[0]}@{smart_domain}",
+        f"{firstname[0]}{lastname[0]}@{smart_domain}": "{firstname[0]}{lastname[0]}@{smart_domain}",
+        f"{firstname[0]}-{lastname[0]}@{smart_domain}": "{firstname[0]}-{lastname[0]}@{smart_domain}",
+        f"{firstname[0]}_{lastname[0]}@{smart_domain}": "{firstname[0]}_{lastname[0]}@{smart_domain}",
+   
     }
 
     for pattern, generalized in patterns.items():
@@ -101,10 +130,10 @@ def detect_email_pattern(firstname, lastname, email, domain):
     
     return "unknown"
 
-def save_pattern(company_name, domain, pattern):
-    existing_pattern = session.query(EmailPattern).filter_by(company_name=company_name, domain=domain).first()
+def save_pattern(company_name, domain, smart_domain, pattern):
+    existing_pattern = session.query(EmailPattern).filter_by(company_name=company_name, domain=domain, smart_domain=smart_domain).first()
     if not existing_pattern:
-        new_pattern = EmailPattern(company_name=company_name, domain=domain, pattern=pattern)
+        new_pattern = EmailPattern(company_name=company_name, domain=domain, smart_domain=smart_domain, pattern=pattern)
         session.add(new_pattern)
         session.commit()
     elif existing_pattern.status != "verified":
@@ -127,10 +156,10 @@ def get_email():
         firstname = row['Firstname']
         lastname = row['Lastname']
 
-        email_pattern = session.query(EmailPattern).filter_by(company_name=company_name, domain=domain).first()
+        email_pattern = session.query(EmailPattern).filter_by(company_name=company_name).first()
         if email_pattern:
             generalized_pattern = email_pattern.pattern
-            email = generalized_pattern.format(firstname=firstname, lastname=lastname, domain=domain, firstname_0=firstname[0])
+            email = generalized_pattern.format(firstname=firstname, lastname=lastname, domain=domain, smart_domain=email_pattern.smart_domain, firstname_0=firstname[0])
             response.append({
                 'Company': company_name,
                 'Domain': domain,
