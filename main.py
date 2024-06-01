@@ -58,12 +58,11 @@ def add_email_pattern():
 
         company_name = row['Company']
         domain = row['Domain']
-        smart_domains = row['Email']
-        smart_domains = str(smart_domain).split("@")
-        smart_domain = smart_domains[1]
         firstname = row['Firstname']
         lastname = row['Lastname']
-        email = row['Email']
+        email = str(row['Email'])
+
+        smart_domain = email.split('@')[1]
 
         pattern = detect_email_pattern(firstname, lastname, email, domain, smart_domain)
         if pattern != "unknown":
@@ -132,7 +131,7 @@ def detect_email_pattern(firstname, lastname, email, domain, smart_domain):
     return "unknown"
 
 def save_pattern(company_name, domain, smart_domain, pattern):
-    existing_pattern = session.query(EmailPattern).filter_by(company_name=company_name, domain=domain).first()
+    existing_pattern = session.query(EmailPattern).filter_by(company_name=company_name, domain=domain, smart_domain=smart_domain).first()
     if not existing_pattern:
         new_pattern = EmailPattern(company_name=company_name, domain=domain, smart_domain=smart_domain, pattern=pattern)
         session.add(new_pattern)
@@ -157,11 +156,10 @@ def get_email():
         firstname = row['Firstname']
         lastname = row['Lastname']
 
-        email_pattern = session.query(EmailPattern).filter_by(company_name=company_name, domain=domain).first()
-        #TODO add smart domain to email pattern when requesting an email. 
+        email_pattern = session.query(EmailPattern).filter_by(company_name=company_name).first()
         if email_pattern:
             generalized_pattern = email_pattern.pattern
-            email = generalized_pattern.format(firstname=firstname, lastname=lastname, domain=domain, firstname_0=firstname[0])
+            email = generalized_pattern.format(firstname=firstname, lastname=lastname, domain=domain, smart_domain=email_pattern.smart_domain, firstname_0=firstname[0])
             response.append({
                 'Company': company_name,
                 'Domain': domain,
