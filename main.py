@@ -50,8 +50,8 @@ logger = logging.getLogger(__name__)
 # Function to replace special characters like ä with ae
 def replace_characters(string: str) -> str:
     for char, replacement in char_map.items():
-        clean_string = string.replace(char, replacement)
-    return clean_string
+        string = string.replace(char, replacement)
+    return string
 
 @app.route('/addEmailPattern', methods=['POST'])
 def add_email_pattern():
