@@ -21,6 +21,17 @@ from io import StringIO
 #This requires the environment varible API_KEYS to be set
 API_KEY = os.environ.get('API_KEY')
 
+#Character replacement:
+char_map = {
+    'ä': 'ae',
+    'ö': 'oe',
+    'ü': 'ue',
+    'ß': 'ss',
+    'Ä': 'ae',
+    'Ö': 'oe',
+    'Ü': 'ue'
+}
+
 # Initialize Flask application
 app = Flask(__name__)
 
@@ -36,6 +47,12 @@ session = Session()
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# Function to replace special characters like ä with ae
+def replace_characters(string: str) -> str:
+    for char, replacement in char_map.items():
+        clean_string = string.replace(char, replacement)
+    return clean_string
+
 @app.route('/addEmailPattern', methods=['POST'])
 def add_email_pattern():
     api_key = request.headers.get('X-API-KEY')
@@ -50,25 +67,32 @@ def add_email_pattern():
         logger.error(f"Error parsing CSV data: {e}")
         return jsonify({"error": "Malformed CSV data"}), 400
     
+    #TODO check if domain can be removed from required_columns
     required_columns = ['Company', 'Domain', 'Firstname', 'Lastname', 'Email']
 
+    valid_rows_counter = 0
+    valid_patterns_counter = 0
     for _, row in data.iterrows():
         if any(pd.isna(row[col]) for col in required_columns):
             continue
-
+        valid_rows_counter += 1
         company_name = row['Company']
         domain = row['Domain']
         firstname = row['Firstname']
         lastname = row['Lastname']
         email = str(row['Email'])
+        #Replace all special characters before processing
+        firstname = replace_characters(firstname)
+        lastname = replace_characters(lastname)
 
         smart_domain = email.split('@')[1]
 
         pattern = detect_email_pattern(firstname, lastname, email, domain, smart_domain)
         if pattern != "unknown":
+            valid_patterns_counter += 1
             save_pattern(company_name, domain, smart_domain, pattern)
     
-    return 'Email patterns processed and saved.'
+    return f'Total of {valid_rows_counter} valid rows scanned and {valid_patterns_counter} patterns detected.'
 
 
 
@@ -155,6 +179,9 @@ def get_email():
         domain = row['Domain']
         firstname = row['Firstname']
         lastname = row['Lastname']
+        #Replace all special characters before processing
+        firstname = replace_characters(firstname)
+        lastname = replace_characters(lastname)
 
         email_pattern = session.query(EmailPattern).filter_by(company_name=company_name).first()
         if email_pattern:
