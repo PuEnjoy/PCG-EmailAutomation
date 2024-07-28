@@ -22,6 +22,7 @@ from io import StringIO
 API_KEY = os.environ.get('API_KEY')
 
 #Character replacement:
+#TODO more special characters like é 
 char_map = {
     'ä': 'ae',
     'ö': 'oe',
@@ -55,9 +56,9 @@ def replace_characters(string: str) -> str:
 
 @app.route('/addEmailPattern', methods=['POST'])
 def add_email_pattern():
-    api_key = request.headers.get('X-API-KEY')
-    if not check_api_key(api_key):
-        return jsonify({"error": "Unauthorized"}), 401
+    # api_key = request.headers.get('X-API-KEY')
+    # if not check_api_key(api_key):
+    #     return jsonify({"error": "Unauthorized"}), 401
     
     csv_data = request.data.decode('utf-8')
 
