@@ -21,15 +21,15 @@ function onOpen() {
 }
 
 //This function is only required when using the addEmailPattern api
-function getApiKey() {
-    //The API key has to be set in the scriptProperties settings unter Project-Settings
-  var scriptProperties = PropertiesService.getScriptProperties();
-  return scriptProperties.getProperty('API_KEY');
-}
+//function getApiKey() {
+//    //The API key has to be set in the scriptProperties settings unter Project-Settings
+//  var scriptProperties = PropertiesService.getScriptProperties();
+//  return scriptProperties.getProperty('API_KEY');
+//}
 
 //This function will take all your entries from the sheet, format them and send them to the api endpoint which will detect the email pattern and add it to the database
 function sendDataToAPI() {
-  var apiKey = getApiKey();
+//  var apiKey = getApiKey();
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   var data = sheet.getDataRange().getValues();
   var headers = data[0];
@@ -60,7 +60,7 @@ function sendDataToAPI() {
     contentType: 'application/csv',
     payload: csvContent,
     headers: {
-      'X-API-KEY': apiKey
+//      'X-API-KEY': apiKey
     }
   };
   Logger.log(options.payload);
