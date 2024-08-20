@@ -1,5 +1,5 @@
 <h1 align="center">
-  <a href="https://cloudspam.net"><img src="https://media.discordapp.net/attachments/1122682710842937415/1245066359570956409/EmailToolsLogo.png?ex=665765e8&is=66561468&hm=bc1e9b21b916b42c0aa617b494c0a3a7493b7fc21acca42f9a4393878adc3725&=&format=webp&quality=lossless&width=700&height=700" alt="AutomatedEmailLogo" width="250"></a>
+  <a href="https://cloudspam.net"><img src="https://media.discordapp.net/attachments/1122682710842937415/1245066359570956409/EmailToolsLogo.png?ex=66c57b28&is=66c429a8&hm=b60003c4cd4c5587b471545d4d68439e8840b5867243dd586fb5207ce22d99b7&=&format=webp&quality=lossless&width=652&height=652" alt="AutomatedEmailLogo" width="250"></a>
   <br>
   Email-Automation Service
   <br>
@@ -28,7 +28,7 @@ Documentation too long? Skip to <a href="#tldr">TLDR</a> for quick setup
 - **Email Pattern Detection:** Automatically detects common email patterns based on provided data.
 - **Google Sheets Integration:** Easily send and receive data from Google Sheets.
 - **Pattern Management:** Ensures patterns are only added when valid and prevents overwriting verified patterns.
-- **REST API:** Provides a simple API for managing and querying email patterns.
+- **FREE API:** Provides a simple API for managing and querying email patterns.
 
 ## How To Use
 
@@ -59,7 +59,7 @@ curl -X POST -H "Content-Type: application/csv" -H "X-API-KEY: your_api_key_here
 ### Setting up Sheets
 #### Script Setup:
 Go to the Extensions tab and select `Apps Script`
-<a><img src="https://media.discordapp.net/attachments/1122682710842937415/1245135032612294727/image.png?ex=6657a5dd&is=6656545d&hm=d0cf549d0de253a6e5d1623ca11fd9f347a92cec2ce99e02d4b1d3b6086d98ff&=&format=webp&quality=lossless&width=634&height=424" alt="Select AppScript" width="250"></a>
+<a><img src="https://cdn.discordapp.com/attachments/1122682710842937415/1245135032612294727/image.png?ex=66c5125d&is=66c3c0dd&hm=31ecf39d53dea6e5d300e89dc4d603b1f618c4fcf2b28cb7ab960edb3ac7d1cb&" alt="Select AppScript" width="250"></a>
 
 Simply copy the gs code from <a href="https://github.com/PuEnjoy/PCG-EmailAutomation/blob/main/appscript-setup.gs">appscript-setup.gs</a> into the empty code file. Save the project and refresh the Google Sheets page.
 #### Sheet Template:
@@ -72,13 +72,13 @@ The following columns must exist in the sheet:
 
 ##### Add Email Template
 The following is an example template ready for adding email patterns to the DB:
-<a><img src="https://media.discordapp.net/attachments/1122682710842937415/1245142245074796544/image.png?ex=6657ac94&is=66565b14&hm=017a33c7945c507d308dcaf2576c3a7aff859f126bc282f48ef14644db74f097&=&format=webp&quality=lossless&width=2880&height=468" alt="AddEmails Example Image" width="1200"></a>
+<a><img src="https://media.discordapp.net/attachments/1122682710842937415/1245142245074796544/image.png?ex=66c51914&is=66c3c794&hm=8c3dfed1544d0b0b3938c42ceb163096e22ca991c0b985c9582074a7b00a6db6&=&format=webp&quality=lossless&width=1410&height=229" alt="AddEmails Example Image" width="1200"></a>
 Note that all rows containing a red cell will be skipped due to missing values.
 The needed columns are retrieved by their name. The Location of those columns is irrelevant and other columns like `RandomColumn` from the example will be ignored. 
 
 ##### Get Email Template
 The following is an example template ready to getting emails from the api:
-<a><img src="https://media.discordapp.net/attachments/1122682710842937415/1245144064303566858/image.png?ex=6657ae46&is=66565cc6&hm=f6e5a08106288b71c2b417921a87f5e96acbbe1c7c26ac2ac23354b9bb951a10&=&format=webp&quality=lossless&width=2880&height=466" alt="GetEmails Example Image" width="1200"></a>
+<a><img src="https://cdn.discordapp.com/attachments/1122682710842937415/1245144064303566858/image.png?ex=66c51ac6&is=66c3c946&hm=5bf3abe370dbb27c94a23100ad61b684080931a446eeddd75d722e0bc422ffb6&" alt="GetEmails Example Image" width="1200"></a>
 Note that that all rows containing a red cell will be skipped due to missing values.
 Row 6 with the orang cell will also be ignored since an entry in the email column already exists for this row.
 The needed columns are retrieved by their name. The Location of those columns is irrelevant and other columns like `RandomColumn` from the example will be ignored. 
@@ -118,6 +118,3 @@ This work is licensed under a
 
 Tobias Kregelin
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-%230077B5.svg?logo=linkedin&logoColor=white)](https://linkedin.com/in/tobias-kregelin-26a638271) [![Github](https://img.shields.io/badge/Github-121013?logo=github&logoColor=white)](https://github.com/PuEnjoy)
-
-Enjoy the project and want to support me?
-[![PayPal](https://img.shields.io/badge/PayPal-003087?logo=paypal&logoColor=fff)](https://paypal.me/tobiaskrgn)

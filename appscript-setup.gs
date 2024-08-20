@@ -15,8 +15,8 @@ Visit the official github page: https://github.com/PuEnjoy/PCG-EmailAutomation
 function onOpen() {
   var ui = SpreadsheetApp.getUi();
   ui.createMenu('Emails')
-//    .addItem('📤 Add Emails to DB', 'sendDataToAPI') //This button may be enabled when planning to use the addEmailPattern api
-    .addItem('📥 Populate Emails Column', 'populateEmails')
+    .addItem('📤 POST Emails', 'sendDataToAPI')
+    .addItem('📥 GET Emails', 'populateEmails')
     .addToUi();
 }
 
